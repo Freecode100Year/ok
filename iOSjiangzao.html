@@ -1,0 +1,60 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>iOS降噪软件</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; padding: 20px; }
+        button { 
+            margin: 10px; 
+            padding: 15px 30px; 
+            font-size: 18px; 
+            background-color: #007AFF; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+        }
+        button:disabled { opacity: 0.5; }
+        #status { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>iOS 降噪软件</h1>
+    <button id="startButton">开始降噪</button>
+    <button id="stopButton" disabled>停止降噪</button>
+    <div id="status">降噪未启动</div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const statusDiv = document.getElementById('status');
+
+        startButton.addEventListener('click', startNoiseReduction);
+        stopButton.addEventListener('click', stopNoiseReduction);
+
+        function startNoiseReduction() {
+            // 调用iOS原生方法
+            window.webkit.messageHandlers.startNoiseReduction.postMessage({});
+            startButton.disabled = true;
+            stopButton.disabled = false;
+            statusDiv.textContent = "降噪已启动";
+        }
+
+        function stopNoiseReduction() {
+            // 调用iOS原生方法
+            window.webkit.messageHandlers.stopNoiseReduction.postMessage({});
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            statusDiv.textContent = "降噪已停止";
+        }
+
+        // 接收来自iOS的消息
+        function updateStatus(message) {
+            statusDiv.textContent = message;
+        }
+    </script>
+</body>
+</html>
+```
