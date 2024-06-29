@@ -1,0 +1,55 @@
+``html
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>7.83Hz舒曼共振发生器</title>
+</head>
+<body>
+    <h1>7.83Hz舒曼共振发生器</h1>
+    <button onclick="play()">播放</button>
+    <button onclick="stop()">停止</button>
+
+    <script>
+        let audioContext;
+        let oscillator1, oscillator2;
+        let gainNode;
+
+        function play() {
+            // 创建音频上下文
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // 创建增益节点
+            gainNode = audioContext.createGain();
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime); // 设置音量
+            
+            // 创建第一个振荡器
+            oscillator1 = audioContext.createOscillator();
+            oscillator1.type = 'sine';
+            oscillator1.frequency.setValueAtTime(100, audioContext.currentTime); // 基频
+            
+            // 创建第二个振荡器
+            oscillator2 = audioContext.createOscillator();
+            oscillator2.type = 'sine';
+            oscillator2.frequency.setValueAtTime(107.83, audioContext.currentTime); // 基频 + 7.83Hz
+            
+            // 连接节点
+            oscillator1.connect(gainNode);
+            oscillator2.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // 开始播放
+            oscillator1.start();
+            oscillator2.start();
+        }
+
+        function stop() {
+            if (oscillator1 && oscillator2) {
+                oscillator1.stop();
+                oscillator2.stop();
+            }
+        }
+    </script>
+</body>
+</html>
+```
